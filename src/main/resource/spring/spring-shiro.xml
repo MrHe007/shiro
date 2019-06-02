@@ -24,17 +24,33 @@
     <!-- 定义ShiroFilter -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="login"/>
+        <property name="loginUrl" value="/login.jsp"/>
         <property name="unauthorizedUrl" value="/nopermission.jsp"/>
         <property name="filterChainDefinitions">
             <value>
-                /**=authc
+                /user/edit=authc
+                /admin/**=authc,roles[admin]
+                /main=authc
             </value>
         </property>
     </bean>
     <!-- 开启aop，对类代理 -->
     <aop:config proxy-target-class="true"></aop:config>
+    <!-- 开启shiro注解支持 -->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
 
+    <!--定义自处理的异常类-->
+    <!-- 定义需要特殊处理的异常，用类名或完全路径名作为key，异常页名作为值 -->
 
+    <!--shiro权限异常处理-->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.apache.shiro.authz.UnauthorizedException">redirect:/nopermission.jsp</prop>
+            </props>
+        </property>
+    </bean>
 
 </beans>

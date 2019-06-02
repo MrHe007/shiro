@@ -3,9 +3,12 @@ package com.bigguy.realm;
 import com.bigguy.dao.UserDaoUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @author bigguy_hc
@@ -21,7 +24,17 @@ public class UserRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        return null;
+
+        String username = (String)principals.getPrimaryPrincipal();
+
+        List<String> roles = UserDaoUtils.getRoles(username);
+        List<String> permissions = UserDaoUtils.getPermissions(username);
+
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        info.addRoles(roles);
+        info.addStringPermissions(permissions);
+
+        return info;
     }
 
     @Override

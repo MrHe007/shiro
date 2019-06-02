@@ -41,6 +41,8 @@ public class UserDaoUtils {
             list.add("movie:*");            // 操作电源所有权限
             list.add("user:*");             // 操作用户所有的权限
             list.add("prot:*");       // 管理员
+            list.add("employee:*");       // 管理员
+            list.add("deptment:*");       // 管理员
         }
         return list;
     }
