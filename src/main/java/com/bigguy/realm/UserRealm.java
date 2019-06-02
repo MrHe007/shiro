@@ -1,13 +1,19 @@
 package com.bigguy.realm;
 
+import com.bigguy.dao.MyUserDao;
 import com.bigguy.dao.UserDaoUtils;
+import com.bigguy.entity.User;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 /**
@@ -16,6 +22,8 @@ import java.util.List;
  */
 public class UserRealm extends AuthorizingRealm {
 
+    @Autowired
+    MyUserDao userDao;
 
     @Override
     public String getName() {
@@ -40,18 +48,13 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 
-        UsernamePasswordToken user = (UsernamePasswordToken)token;
-        String username = (String)user.getPrincipal();
-        String password = new String(user.getPassword());
+        UsernamePasswordToken userToken = (UsernamePasswordToken)token;
+        String username = (String)userToken.getPrincipal();         // 假定 username 是user中的唯一标识
 
-        SimpleAuthenticationInfo info = null;
-
-        if("admin".equals(username) && UserDaoUtils.getPass(username).equals(password)){
-            info  = new SimpleAuthenticationInfo(username, password, getName());
-        }else if("tom".equals(username) &&UserDaoUtils.getPass(username).equals(password)){
-            info  = new SimpleAuthenticationInfo(username, password, getName());
-        }
-
+        User user = userDao.findUserByUsername(username);
+        // 进行数据库查询，返回密码
+        String password = user.getPassword();           // 数据库密码（加密的）
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(username, password, ByteSource.Util.bytes(username),getName());
         return info;
     }
 }

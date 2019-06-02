@@ -13,7 +13,7 @@
 
     <!--配置自定义realm-->
     <bean id="userRealm" class="com.bigguy.realm.UserRealm">
-
+        <property name="credentialsMatcher" ref="credentialsMatcher" />
     </bean>
 
     <!-- 配置安全管理器SecurityManager -->
@@ -51,6 +51,13 @@
                 <prop key="org.apache.shiro.authz.UnauthorizedException">redirect:/nopermission.jsp</prop>
             </props>
         </property>
+    </bean>
+
+    <!--加密-->
+    <bean id="credentialsMatcher"
+          class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        <property name="hashAlgorithmName" value="md5" />
+        <property name="hashIterations" value="3" />
     </bean>
 
 </beans>
