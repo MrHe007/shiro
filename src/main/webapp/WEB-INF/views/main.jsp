@@ -6,6 +6,9 @@
 </head>
 <body>
 欢迎【${subject.principal}】光临 <a href="/logout">注销</a> <a href="/reload">重新加载权限</a><br>
+
+<a href="/admin/reload">重写加载</a>
+
 <shiro:hasPermission name="employee:list">
     <a href="/admin/employee">员工列表</a><br>
 </shiro:hasPermission>

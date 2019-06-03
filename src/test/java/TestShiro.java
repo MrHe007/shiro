@@ -10,8 +10,8 @@ public class TestShiro {
     @Test
     public void testMd5(){
 
-        String name = "hechen";
-        String salt = "hechen";
+        String name = "admin";
+        String salt = "admin";
 
         Md5Hash md5Hash = new Md5Hash(name, salt, 3);
 

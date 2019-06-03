@@ -24,13 +24,13 @@
     <!-- 定义ShiroFilter -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="/login.jsp"/>
+        <property name="loginUrl" value="/login"/>
+        <property name="successUrl" value="/main" />
         <property name="unauthorizedUrl" value="/nopermission.jsp"/>
         <property name="filterChainDefinitions">
             <value>
-                /user/edit=authc
-                /admin/**=authc,roles[admin]
-                /main=authc
+                /logout=logout
+                /**=authc
             </value>
         </property>
     </bean>
